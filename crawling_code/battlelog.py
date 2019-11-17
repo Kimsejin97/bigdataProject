@@ -1,3 +1,4 @@
+ # -*- coding: utf8 -*-
 import DB_connection
 
 import requests, json
@@ -5,7 +6,16 @@ import re
 import pandas as pd
 from flatten_json import flatten
 
-tags = DB_connection.tags
+from sqlalchemy import *
+from sqlalchemy.orm import sessionmaker
+
+Session = sessionmaker()
+Session.configure(bind = DB_connection.engine)
+session = Session()
+
+sql = text('select tag from ranking')
+result = session.execute(sql)
+tags = [row[0] for row in result]
 
 for tag in range(len(tags)):
     playerTag = tags[tag]
@@ -24,22 +34,20 @@ for tag in range(len(tags)):
                         or x['event']['mode'] == 'bounty'
                         or x['event']['mode'] == 'siege')]
 
-    battle_log = (flatten(data) for data in data_set)
+    for i in data_set:
+        del i['battle']['starPlayer']['name']
+        del i['battle']['teams'][0][0]['name']
+        del i['battle']['teams'][0][1]['name']
+        del i['battle']['teams'][0][2]['name']
+        del i['battle']['teams'][1][0]['name']
+        del i['battle']['teams'][1][1]['name']
+        del i['battle']['teams'][1][2]['name']
+
+
+    battle_log = (flatten(d) for d in data_set)
     battlelog_df = pd.DataFrame(battle_log)
 
     playerTag = tags[tag]
     battlelog_df['playerTag'] = playerTag
-    cols = battlelog_df.columns.tolist()
-    cols = cols[-1:] + cols[:-1]
-    battlelog_df = battlelog_df[cols]
-    # battlelog_df.columns = ['battleTime','evnetId','eventMode','map', 'battleMode','type','result','duration','trophyChange'
-    #  ,'starPlayer_tag','starPlayer_name','starPlayer_brawler_id','starPlayer_brawler_name','starPlayer_brawler_power','starPlayer_brawler_trophies'
-    #  ,'player1_tag','player1_name','player1_brawler_id','player1_brawler_name','player1_brawler_power','player1_brawler_trophies'
-    #  ,'player2_tag','player2_name','player2_brawler_id','player2_brawler_name','player2_brawler_power','player2_brawler_trophies'
-    #  ,'player3_tag','player3_name','player3_brawler_id','player3_brawler_name','player3_brawler_power','player3_brawler_trophies'
-    #  ,'player4_tag','player4_name','player4_brawler_id','player4_brawler_name','player4_brawler_power','player4_brawler_trophies'
-    #  ,'player5_tag','player5_name','player5_brawler_id','player5_brawler_name','player5_brawler_power','player5_brawler_trophies'
-    #  ,'player6_tag','player6_name','player6_brawler_id','player6_brawler_name','player6_brawler_power','player6_brawler_trophies'
-    #  ,'playerTag']
 
     battlelog_df.to_sql(name='battlelog', con = DB_connection.engine, if_exists='append', index = False)
