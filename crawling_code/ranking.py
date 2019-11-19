@@ -5,9 +5,17 @@ import DB_connection
 import pandas as pd
 from flatten_json import flatten
 
-data = crawling_ranking.crawling_func()
-ranking = (flatten(data) for data in data['items'])
-ranking_df = pd.DataFrame(ranking)
-ranking_df = ranking_df['tag']
+region = ['kr', 'cn', 'jp']
 
-ranking_df.to_sql(name='ranking', con = DB_connection.engine, if_exists='append', index = False)
+for i in range(len(region)):
+    data = crawling_ranking.crawling_func(region[i])
+    ranking = (flatten(data) for data in data['items'])
+    ranking_df = pd.DataFrame(ranking)
+
+    ranking_df = ranking_df['tag']
+
+    ranking_df.to_sql(name='ranking', con = DB_connection.engine, if_exists='replace', index = False)
+
+    conn = DB_connection.engine.connect()
+    result = conn.execute("INSERT IGNORE INTO re_ranking SELECT * FROM ranking")
+    conn.close()

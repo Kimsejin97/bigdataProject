@@ -13,7 +13,7 @@ Session = sessionmaker()
 Session.configure(bind = DB_connection.engine)
 session = Session()
 
-sql = text('select tag from ranking')
+sql = text('select tag from re_ranking')
 result = session.execute(sql)
 tags = [row[0] for row in result]
 
@@ -27,21 +27,21 @@ for tag in range(len(tags)):
     data = response.json()
 
     for i in data['items']:
-        data_set = [x for x in data['items']
-                    if (x['event']['mode'] == 'gemGrab'
-                        or x['event']['mode'] == 'heist'
-                        or x['event']['mode'] == 'brawlBall'
-                        or x['event']['mode'] == 'bounty'
-                        or x['event']['mode'] == 'siege')]
+            data_set = [x for x in data['items']
+                            if (x['event']['mode'] == 'gemGrab'
+                                or x['event']['mode'] == 'heist'
+                                or x['event']['mode'] == 'brawlBall'
+                                or x['event']['mode'] == 'bounty'
+                                or x['event']['mode'] == 'siege')]
 
-    for i in data_set:
-        del i['battle']['starPlayer']['name']
-        del i['battle']['teams'][0][0]['name']
-        del i['battle']['teams'][0][1]['name']
-        del i['battle']['teams'][0][2]['name']
-        del i['battle']['teams'][1][0]['name']
-        del i['battle']['teams'][1][1]['name']
-        del i['battle']['teams'][1][2]['name']
+    for j in data_set:
+        del j['battle']['starPlayer']['name']
+        del j['battle']['teams'][0][0]['name']
+        del j['battle']['teams'][0][1]['name']
+        del j['battle']['teams'][0][2]['name']
+        del j['battle']['teams'][1][0]['name']
+        del j['battle']['teams'][1][1]['name']
+        del j['battle']['teams'][1][2]['name']
 
 
     battle_log = (flatten(d) for d in data_set)
@@ -51,3 +51,7 @@ for tag in range(len(tags)):
     battlelog_df['playerTag'] = playerTag
 
     battlelog_df.to_sql(name='battlelog', con = DB_connection.engine, if_exists='append', index = False)
+
+    conn = DB_connection.engine.connect()
+    result = conn.execute("INSERT IGNORE INTO re_battlelog SELECT * FROM battlelog")
+    conn.close()

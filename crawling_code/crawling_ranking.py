@@ -3,9 +3,7 @@ import requests, json
 import re
 
 
-def crawling_func():
-    # 지역코드
-    region = 'kr'
+def crawling_func(region):
     #API URL INFO
     URL = 'https://api.brawlstars.com/v1/rankings/' + region + '/players'
     # TOKEN
