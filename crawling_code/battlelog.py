@@ -7,6 +7,7 @@ import pandas as pd
 from flatten_json import flatten
 
 from sqlalchemy import *
+from sqlalchemy import exc
 from sqlalchemy.orm import sessionmaker
 
 Session = sessionmaker()
@@ -21,27 +22,53 @@ for tag in range(len(tags)):
     playerTag = tags[tag]
     rePlayerTag= playerTag.replace('#', '%23')
     URL = 'https://api.brawlstars.com/v1/players/' + rePlayerTag + '/battlelog'
-    token = ''
+    token=''
     headers = {'authorization' : 'Bearer ' + token, 'Content-Type' : 'application/json;charset=UTF-8'}
     response = requests.get(URL, headers=headers)
     data = response.json()
 
     for i in data['items']:
-            data_set = [x for x in data['items']
-                            if (x['event']['mode'] == 'gemGrab'
-                                or x['event']['mode'] == 'heist'
-                                or x['event']['mode'] == 'brawlBall'
-                                or x['event']['mode'] == 'bounty'
-                                or x['event']['mode'] == 'siege')]
+        data_set = [x for x in data['items']
+                        if (x['event']['mode'] == 'gemGrab'
+                            or x['event']['mode'] == 'heist'
+                            or x['event']['mode'] == 'brawlBall'
+                            or x['event']['mode'] == 'bounty'
+                            or x['event']['mode'] == 'siege')]
 
-    for j in data_set:
-        del j['battle']['starPlayer']['name']
-        del j['battle']['teams'][0][0]['name']
-        del j['battle']['teams'][0][1]['name']
-        del j['battle']['teams'][0][2]['name']
-        del j['battle']['teams'][1][0]['name']
-        del j['battle']['teams'][1][1]['name']
-        del j['battle']['teams'][1][2]['name']
+    for i in data_set:
+        try:
+            del i['battle']['trophyChange']
+            del i['battle']['starPlayer']['brawler']['power']
+            del i['battle']['starPlayer']['brawler']['trophies']
+        except: pass
+        del i['event']['id']
+        del i['battle']['mode']
+        del i['battle']['type']
+        del i['battle']['duration']
+        del i['battle']['starPlayer']['tag']
+        del i['battle']['starPlayer']['name']
+        del i['battle']['starPlayer']['brawler']['id']
+        del i['battle']['starPlayer']['brawler']['name']
+        del i['battle']['starPlayer']['brawler']
+        del i['battle']['starPlayer']
+        del i['battle']['teams'][0][0]['name']
+        del i['battle']['teams'][0][1]['name']
+        del i['battle']['teams'][0][2]['name']
+        del i['battle']['teams'][1][0]['name']
+        del i['battle']['teams'][1][1]['name']
+        del i['battle']['teams'][1][2]['name']
+        del i['battle']['teams'][0][0]['tag']
+        del i['battle']['teams'][0][0]['brawler']['id']
+        del i['battle']['teams'][0][1]['tag']
+        del i['battle']['teams'][0][1]['brawler']['id']
+        del i['battle']['teams'][0][2]['tag']
+        del i['battle']['teams'][0][2]['brawler']['id']
+        del i['battle']['teams'][1][0]['tag']
+        del i['battle']['teams'][1][0]['brawler']['id']
+        del i['battle']['teams'][1][1]['tag']
+        del i['battle']['teams'][1][1]['brawler']['id']
+        del i['battle']['teams'][1][2]['tag']
+        del i['battle']['teams'][1][2]['brawler']['id']
 
 
     battle_log = (flatten(d) for d in data_set)
@@ -50,8 +77,8 @@ for tag in range(len(tags)):
     playerTag = tags[tag]
     battlelog_df['playerTag'] = playerTag
 
-    battlelog_df.to_sql(name='battlelog', con = DB_connection.engine, if_exists='append', index = False)
-
-    conn = DB_connection.engine.connect()
-    result = conn.execute("INSERT IGNORE INTO re_battlelog SELECT * FROM battlelog")
-    conn.close()
+    for i in range(len(battlelog_df)):
+        try:
+            battlelog_df.iloc[i:i+1].to_sql(name="battlelog", con = DB_connection.engine, if_exists='append', index = False)
+        except exc.IntegrityError as e:
+            pass
