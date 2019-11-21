@@ -57,17 +57,10 @@ for tag in range(len(tags)):
         del i['battle']['teams'][1][0]['name']
         del i['battle']['teams'][1][1]['name']
         del i['battle']['teams'][1][2]['name']
-        del i['battle']['teams'][0][0]['tag']
         del i['battle']['teams'][0][0]['brawler']['id']
-        del i['battle']['teams'][0][1]['tag']
-        del i['battle']['teams'][0][1]['brawler']['id']
-        del i['battle']['teams'][0][2]['tag']
         del i['battle']['teams'][0][2]['brawler']['id']
-        del i['battle']['teams'][1][0]['tag']
         del i['battle']['teams'][1][0]['brawler']['id']
-        del i['battle']['teams'][1][1]['tag']
         del i['battle']['teams'][1][1]['brawler']['id']
-        del i['battle']['teams'][1][2]['tag']
         del i['battle']['teams'][1][2]['brawler']['id']
 
 
@@ -77,8 +70,4 @@ for tag in range(len(tags)):
     playerTag = tags[tag]
     battlelog_df['playerTag'] = playerTag
 
-    for i in range(len(battlelog_df)):
-        try:
-            battlelog_df.iloc[i:i+1].to_sql(name="battlelog", con = DB_connection.engine, if_exists='append', index = False)
-        except exc.IntegrityError as e:
-            pass
+    battlelog_df.to_sql(name="battlelog", con = DB_connection.engine, if_exists='append', index = False)
