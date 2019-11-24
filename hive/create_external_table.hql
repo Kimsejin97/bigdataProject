@@ -1,0 +1,33 @@
+CREATE EXTERNAL TABLE battlelog (
+    battleTime STRING,
+    event_mode STRING,
+    event_map STRING,
+    battle_result STRING,
+    battle_teams_0_0_tag STRING,
+    battle_teams_0_0_brawler_name STRING,
+    battle_teams_0_0_brawler_power INT,
+    battle_teams_0_0_brawler_trophies INT,
+    battle_teams_0_1_tag STRING,
+    battle_teams_0_1_brawler_name STRING,
+    battle_teams_0_1_brawler_power INT,
+    battle_teams_0_1_brawler_trophies INT,
+    battle_teams_0_2_tag STRING,
+    battle_teams_0_2_brawler_name STRING,
+    battle_teams_0_2_brawler_power INT,
+    battle_teams_0_2_brawler_trophies INT,
+    battle_teams_1_0_tag STRING,
+    battle_teams_1_0_brawler_name STRING,
+    battle_teams_1_0_brawler_power INT,
+    battle_teams_1_0_brawler_trophies INT,
+    battle_teams_1_1_tag STRING,
+    battle_teams_1_1_brawler_name STRING,
+    battle_teams_1_1_brawler_power INT,
+    battle_teams_1_1_brawler_trophies INT,
+    battle_teams_1_2_tag STRING,
+    battle_teams_1_2_brawler_name STRING,
+    battle_teams_1_2_brawler_power INT,
+    battle_teams_1_2_brawler_trophies INT,
+    playerTag STRING
+)
+row format delimited fields terminated BY ',' lines terminated BY '\n'
+LOCATION '/apps/hive/warehouse/brawlstars.db/re_battlelog';

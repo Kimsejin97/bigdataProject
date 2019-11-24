@@ -1,16 +1,18 @@
-CREATE DATABASE brawlstars;
 USE brawlstars;
 
+DROP TABLE IF EXISTS ranking;
 CREATE TABLE ranking (
     tag VARCHAR(20) NOT NULL,
     primary key(tag)
 );
 
+DROP TABLE IF EXISTS re_ranking;
 CREATE TABLE re_ranking (
     tag VARCHAR(20) NOT NULL,
     primary key(tag)
 );
 
+DROP TABLE IF EXISTS battlelog;
 CREATE TABLE battlelog (
     battleTime VARCHAR(45) NOT NULL,
     event_mode VARCHAR(45) NOT NULL,
@@ -40,15 +42,5 @@ CREATE TABLE battlelog (
     battle_teams_1_2_brawler_name VARCHAR(45),
     battle_teams_1_2_brawler_power INT,
     battle_teams_1_2_brawler_trophies INT,
-    playerTag VARCHAR(20) NOT NULL,
-    PRIMARY KEY (battleTime , playerTag)
+    playerTag VARCHAR(20) NOT NULL
 );
-
-
-select battleTime, playerTag, count(*) as A
-from battlelog
-group by battleTime, playerTag
-having A>1;
-
-select * from battlelog;
-select * from re_ranking;

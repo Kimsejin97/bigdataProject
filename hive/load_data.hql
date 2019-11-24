@@ -1,0 +1,1 @@
+LOAD DATA INPATH '/user/maria_dev/data/re_battlelog/part-m-00000' OVERWRITE INTO TABLE brawlstars.re_battlelog;

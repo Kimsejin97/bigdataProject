@@ -58,6 +58,7 @@ for tag in range(len(tags)):
         del i['battle']['teams'][1][1]['name']
         del i['battle']['teams'][1][2]['name']
         del i['battle']['teams'][0][0]['brawler']['id']
+        del i['battle']['teams'][0][1]['brawler']['id']
         del i['battle']['teams'][0][2]['brawler']['id']
         del i['battle']['teams'][1][0]['brawler']['id']
         del i['battle']['teams'][1][1]['brawler']['id']

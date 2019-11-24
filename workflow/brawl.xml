@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<workflow-app xmlns="uri:oozie:workflow:0.5" name="brawl">
+    <start to="sqoop"/>
+    <action name="sqoop">
+        <sqoop xmlns="uri:oozie:sqoop-action:0.4">
+            <job-tracker>${resourceManager}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <command>import -connect jdbc:mysql://localhost/brawlstars -table re_battlelog -m 1 -username sqoop_brawl -password-file /user/maria_dev/.password -delete-target-dir -target-dir data/re_battlelog</command>
+        </sqoop>
+        <ok to="hive2"/>
+        <error to="kill"/>
+    </action>
+    <action name="hive2">
+        <hive2 xmlns="uri:oozie:hive2-action:0.2">
+            <job-tracker>${resourceManager}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <jdbc-url>jdbc:hive2://sandbox-hdp.hortonworks.com:2181/;serviceDiscoveryMode=zooKeeper;zooKeeperNamespace=hiveserver2</jdbc-url>
+            <script>/user/maria_dev/hive/scripts/load_data.hql</script>
+        </hive2>
+        <ok to="end"/>
+        <error to="kill"/>
+    </action>
+    <kill name="kill">
+        <message>${wf:errorMessage(wf:lastErrorNode())}</message>
+    </kill>
+    <end name="end"/>
+</workflow-app>

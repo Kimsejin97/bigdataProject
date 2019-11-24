@@ -9,7 +9,7 @@ def crawling_func():
     URL = 'https://api.brawlstars.com/v1/rankings/' + region + '/players'
 
     token=''
-    
+
     headers = {'authorization' : 'Bearer ' + token, 'Content-Type' : 'application/json;charset=UTF-8'}
 
     response = requests.get(URL, headers=headers)
