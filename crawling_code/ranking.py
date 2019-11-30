@@ -1,7 +1,6 @@
- # -*- coding: utf8 -*-
+#랭킹 크롤링함수 호출, 랭킹정보 중 tag만 mysql의 ranking테이블에 저장
 import crawling_ranking
 import DB_connection
-
 import pandas as pd
 from flatten_json import flatten
 

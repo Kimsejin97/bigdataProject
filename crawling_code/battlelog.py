@@ -1,11 +1,9 @@
- # -*- coding: utf8 -*-
+#api에서 배틀로그를 받아옴, 3vs3모드와 필요한 데이터만 mysql battlelog테이블에 넣음
 import DB_connection
-
 import requests, json
 import re
 import pandas as pd
 from flatten_json import flatten
-
 from sqlalchemy import *
 from sqlalchemy import exc
 from sqlalchemy.orm import sessionmaker

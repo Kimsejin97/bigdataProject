@@ -1,4 +1,4 @@
- # -*- coding: utf8 -*-
+#VM안 MYSQL DB연동
 import sqlalchemy
 from sqlalchemy import *
 

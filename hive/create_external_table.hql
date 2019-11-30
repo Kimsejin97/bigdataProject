@@ -30,4 +30,4 @@ CREATE EXTERNAL TABLE battlelog (
     playerTag STRING
 )
 row format delimited fields terminated BY ',' lines terminated BY '\n'
-LOCATION '/apps/hive/warehouse/brawlstars.db/re_battlelog';
+LOCATION '/user/maria_dev/battlelog';
