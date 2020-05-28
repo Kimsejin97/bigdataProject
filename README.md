@@ -16,7 +16,7 @@ https://developer.brawlstars.com/
 
 ## 데이터 수집방법
 
-![image](https://user-images.githubusercontent.com/33508257/83154171-c5630f00-a13a-11ea-8159-60931fef1d37.png)
+<img src="https://user-images.githubusercontent.com/33508257/83154171-c5630f00-a13a-11ea-8159-60931fef1d37.png" width="300" height="300">
 
 1. Get(/rankings/{countryCode}/players)를 통해 랭커들의 플레이어 태그를 수집
 2. Get(/players/{playerTag}/battlelog)를 통해 플레이어 태그에 해당하는 유저 배틀로그
