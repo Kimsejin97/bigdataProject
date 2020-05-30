@@ -77,3 +77,4 @@ https://developer.brawlstars.com/
 
 ## 데이터 분석결과
 
+![gif](https://user-images.githubusercontent.com/33508257/83318280-20495300-a26e-11ea-85d3-5f3e17afefdb.gif)
